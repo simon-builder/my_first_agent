@@ -17,7 +17,7 @@ agent = CodeAgent(
     planning_interval=None,
     name=None,
     description=None,
-    authorized_imports=['unicodedata', 're', 'math', 'collections', 'statistics', 'itertools', 'stat', 'queue', 'pandas', 'time', 'datetime', 'random'],
+    authorized_imports=['unicodedata', 'itertools', 'time', 'statistics', 'datetime', 'queue', 'collections', 'pandas', 're', 'math', 'stat', 'random'],
     prompts_path='./prompts.yaml'
 )
 
