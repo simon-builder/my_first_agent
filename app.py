@@ -6,7 +6,10 @@ from scripts.visit_webpage import VisitWebpageTool
 from scripts.final_answer import FinalAnswerTool
 
 
-model = HfApiModel()
+model = HfApiModel(
+data={'last_input_token_count': None, 'last_output_token_count': None, 'model_id': 'Qwen/Qwen2.5-Coder-32B-Instruct', 'custom_role_conversions': None}
+
+)
 
 
 web_search = DuckDuckGoSearchTool()
@@ -32,7 +35,7 @@ agent = CodeAgent(
     
     description=None,
     
-    authorized_imports=['statistics', 're', 'stat', 'queue', 'datetime', 'collections', 'itertools', 'unicodedata', 'random', 'time', 'math', 'pandas'],
+    authorized_imports=['collections', 're', 'itertools', 'random', 'queue', 'stat', 'statistics', 'time', 'math', 'datetime', 'unicodedata', 'pandas'],
     
     prompts_path='./prompts.yaml'
 )
