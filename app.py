@@ -7,7 +7,7 @@ from scripts.final_answer import FinalAnswerTool
 
 
 model = HfApiModel(
-model_id=Qwen/Qwen2.5-Coder-32B-Instruct
+model_id='Qwen/Qwen2.5-Coder-32B-Instruct'
 custom_role_conversions=None
 
 )
@@ -33,7 +33,7 @@ agent = CodeAgent(
     
     description=None,
     
-    authorized_imports=['itertools', 'stat', 'queue', 'math', 'time', 'datetime', 'unicodedata', 'random', 'collections', 'statistics', 'pandas', 're'],
+    authorized_imports=['re', 'itertools', 'time', 'unicodedata', 'pandas', 'random', 'math', 'collections', 'stat', 'datetime', 'queue', 'statistics'],
     
     prompts_path='./prompts.yaml'
 )
