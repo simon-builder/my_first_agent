@@ -7,9 +7,8 @@ from scripts.final_answer import FinalAnswerTool
 
 
 model = HfApiModel(
-model_id='Qwen/Qwen2.5-Coder-32B-Instruct'
-custom_role_conversions=None
-
+model_id='Qwen/Qwen2.5-Coder-32B-Instruct',
+custom_role_conversions=None,
 )
 
 web_search = DuckDuckGoSearchTool()
@@ -33,7 +32,7 @@ agent = CodeAgent(
     
     description=None,
     
-    authorized_imports=['re', 'itertools', 'time', 'unicodedata', 'pandas', 'random', 'math', 'collections', 'stat', 'datetime', 'queue', 'statistics'],
+    authorized_imports=['datetime', 'itertools', 'unicodedata', 'queue', 'stat', 'pandas', 'statistics', 'collections', 'math', 'time', 'random', 're'],
     
     prompts_path='./prompts.yaml'
 )
