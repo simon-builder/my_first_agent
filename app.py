@@ -11,11 +11,8 @@ data={'last_input_token_count': None, 'last_output_token_count': None, 'model_id
 
 )
 
-
 web_search = DuckDuckGoSearchTool()
-
 visit_webpage = VisitWebpageTool()
-
 final_answer = FinalAnswerTool()
 
 
@@ -35,7 +32,7 @@ agent = CodeAgent(
     
     description=None,
     
-    authorized_imports=['collections', 're', 'itertools', 'random', 'queue', 'stat', 'statistics', 'time', 'math', 'datetime', 'unicodedata', 'pandas'],
+    authorized_imports=['math', 'random', 'unicodedata', 'collections', 'statistics', 'queue', 'itertools', 'stat', 'time', 'datetime', 'pandas', 're'],
     
     prompts_path='./prompts.yaml'
 )
