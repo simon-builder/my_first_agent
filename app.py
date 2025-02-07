@@ -1,22 +1,42 @@
 
-from smolagents import GradioUI, {{ class_name }}, {{ agent_dict['model']['class'] }}
+from smolagents import GradioUI, CodeAgent, HfApiModel
 
-{% for tool in tools.values() %}
-from scripts.{{ tool.name }} import {{ tool.__class__.__name__ }}
-{% endfor %}
 
-model = {{ agent_dict['model']['class'] }}()
+from scripts.web_search import DuckDuckGoSearchTool
 
-{% for tool in tools.values() %}
-{{ tool.name }} = {{ tool.__class__.__name__ }}()
-{% endfor %}
+from scripts.visit_webpage import VisitWebpageTool
 
-agent = {{ class_name }}(
+from scripts.final_answer import FinalAnswerTool
+
+
+model = HfApiModel()
+
+
+web_search = DuckDuckGoSearchTool()
+
+visit_webpage = VisitWebpageTool()
+
+final_answer = FinalAnswerTool()
+
+
+agent = CodeAgent(
     model=model,
-    tools=[{% for tool in tools.keys() %}{{ tool }}{% if not loop.last %}, {% endif %}{% endfor %}],
-    {% for attribute_name, value in agent_dict.items() if attribute_name not in ["model", "tools", "prompt_templates"] %}
-    {{ attribute_name }}={{ value }},
-    {% endfor %}
+    tools=[web_search, visit_webpage, final_answer],
+    
+    max_steps=6,
+    
+    verbosity_level=1,
+    
+    grammar=None,
+    
+    planning_interval=None,
+    
+    name=None,
+    
+    description=None,
+    
+    authorized_imports=['collections', 'itertools', 'statistics', 'stat', 'random', 'math', 'pandas', 'datetime', 'queue', 're', 'unicodedata', 'time'],
+    
     prompts_path='./prompts.yaml'
 )
 
