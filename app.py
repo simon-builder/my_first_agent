@@ -1,11 +1,8 @@
 
 from smolagents import GradioUI, CodeAgent, HfApiModel
 
-
 from scripts.web_search import DuckDuckGoSearchTool
-
 from scripts.visit_webpage import VisitWebpageTool
-
 from scripts.final_answer import FinalAnswerTool
 
 
@@ -35,7 +32,7 @@ agent = CodeAgent(
     
     description=None,
     
-    authorized_imports=['collections', 'itertools', 'statistics', 'stat', 'random', 'math', 'pandas', 'datetime', 'queue', 're', 'unicodedata', 'time'],
+    authorized_imports=['statistics', 're', 'stat', 'queue', 'datetime', 'collections', 'itertools', 'unicodedata', 'random', 'time', 'math', 'pandas'],
     
     prompts_path='./prompts.yaml'
 )
