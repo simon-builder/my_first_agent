@@ -1,5 +1,6 @@
 
 import yaml
+from pathlib import Path
 from smolagents import GradioUI, CodeAgent, HfApiModel
 
 from tools.web_search import DuckDuckGoSearchTool
@@ -17,10 +18,6 @@ visit_webpage = VisitWebpageTool()
 final_answer = FinalAnswerTool()
 
 
-prompt_templates = yaml.safe_load(
-    importlib.resources.files("smolagents.prompts").joinpath("code_agent.yaml").read_text()
-)
-
 agent = CodeAgent(
     model=model,
     tools=[web_search, visit_webpage, final_answer],
@@ -30,7 +27,7 @@ agent = CodeAgent(
     planning_interval=None,
     name=None,
     description=None,
-    prompt_templates=prompt_templates
+    prompt_templates=yaml.safe_load(Path("prompts.yaml").read_text()
 )
 
 GradioUI(agent).launch()
