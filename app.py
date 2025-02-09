@@ -1,6 +1,5 @@
 
 import yaml
-from pathlib import Path
 from smolagents import GradioUI, CodeAgent, HfApiModel
 
 from tools.web_search import DuckDuckGoSearchTool
@@ -9,6 +8,8 @@ from tools.final_answer import FinalAnswerTool
 
 
 model = HfApiModel(
+max_tokens=2096,
+temperature=0.5,
 model_id='Qwen/Qwen2.5-Coder-32B-Instruct',
 custom_role_conversions=None,
 )
