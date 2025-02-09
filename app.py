@@ -18,6 +18,9 @@ visit_webpage = VisitWebpageTool()
 final_answer = FinalAnswerTool()
 
 
+with open("prompts.yaml", 'r') as stream:
+    prompt_templates = yaml.safe_load(stream)
+
 agent = CodeAgent(
     model=model,
     tools=[web_search, visit_webpage, final_answer],
@@ -27,7 +30,7 @@ agent = CodeAgent(
     planning_interval=None,
     name=None,
     description=None,
-    prompt_templates=yaml.safe_load(Path("prompts.yaml").read_text()
+    prompt_templates=prompt_templates
 )
 
 GradioUI(agent).launch()
