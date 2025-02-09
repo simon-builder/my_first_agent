@@ -1,9 +1,9 @@
 
 from smolagents import GradioUI, CodeAgent, HfApiModel
 
-from scripts.web_search import DuckDuckGoSearchTool
-from scripts.visit_webpage import VisitWebpageTool
-from scripts.final_answer import FinalAnswerTool
+from tools.web_search import DuckDuckGoSearchTool
+from tools.visit_webpage import VisitWebpageTool
+from tools.final_answer import FinalAnswerTool
 
 
 model = HfApiModel(
@@ -25,7 +25,7 @@ agent = CodeAgent(
     planning_interval=None,
     name=None,
     description=None,
-    authorized_imports=['statistics', 'unicodedata', 'collections', 'queue', 'time', 'pandas', 'stat', 'random', 'datetime', 're', 'math', 'itertools'],
+    authorized_imports=['pandas', 'queue', 'time', 'itertools', 'stat', 're', 'unicodedata', 'statistics', 'random', 'math', 'collections', 'datetime'],
     prompts_path='./prompts.yaml'
 )
 
