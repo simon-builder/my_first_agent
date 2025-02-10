@@ -3,6 +3,7 @@ import datetime
 import requests
 import pytz
 import yaml
+from tools.final_answer import FinalAnswerTool
 
 from Gradio_UI import GradioUI
 
@@ -32,6 +33,7 @@ def get_current_time_in_timezone(timezone: str) -> str:
         return f"Error fetching time for timezone '{timezone}': {str(e)}"
 
 
+final_answer = FinalAnswerTool()
 model = HfApiModel(
 max_tokens=2096,
 temperature=0.5,
@@ -48,7 +50,7 @@ with open("prompts.yaml", 'r') as stream:
     
 agent = CodeAgent(
     model=model,
-    tools=[image_generation_tool,get_current_time_in_timezone,DuckDuckGoSearchTool()], ## add or remove tools here
+    tools=[image_generation_tool,get_current_time_in_timezone,final_answer,DuckDuckGoSearchTool()], ## add or remove tools here
     max_steps=6,
     verbosity_level=1,
     grammar=None,
