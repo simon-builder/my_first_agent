@@ -3,20 +3,52 @@ import datetime
 import requests
 import pytz
 import yaml
+import yfinance as yf
+from bs4 import BeautifulSoup
 from tools.final_answer import FinalAnswerTool
 
 from Gradio_UI import GradioUI
 
-# Below is an example of a tool that does nothing. Amaze us with your creativity !
+# Tool to retrieve stock price from Yahoo Finance
+
 @tool
-def my_cutom_tool(arg1:str, arg2:int)-> str: #it's import to specify the return type
-    #Keep this format for the description / args / args description but feel free to modify the tool
-    """A tool that does nothing yet 
+def get_stock_price(ticker: str) -> str:
+    """A tool that fetches the latest stock price for a given ticker symbol from Yahoo Finance.
+
     Args:
-        arg1: the first argument
-        arg2: the second argument
+        ticker: A string representing the stock ticker symbol (e.g., "AAPL" for Apple).
     """
-    return "What magic will you build ?"
+
+    try:
+        # Get the current time in EST (Eastern Time Zone)
+        current_time = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-5)))
+
+        # Market open and close times (EST)
+        market_open = current_time.replace(hour=9, minute=30, second=0, microsecond=0)
+        market_close = current_time.replace(hour=16, minute=0, second=0, microsecond=0)
+
+        stock = yf.Ticker(ticker)
+        price = None
+        currency = stock.fast_info.get("currency", "USD")
+
+        # Check if the market is open
+        if market_open <= current_time <= market_close:
+            # Try to get live price
+            price = stock.fast_info.get("last_price")
+        else:
+            # Market is closed, use last closing price
+            hist = stock.history(period="1d")
+            if not hist.empty:
+                price = hist["Close"].iloc[-1]  # Last closing price
+
+        if price is None:
+            return "Price unavailable"
+
+        return f"{currency} {price:,.2f}"
+
+    except Exception as e:
+        return f"Error fetching price: {e}"
+
 
 @tool
 def get_current_time_in_timezone(timezone: str) -> str:
@@ -51,7 +83,7 @@ with open("prompts.yaml", 'r') as stream:
     
 agent = CodeAgent(
     model=model,
-    tools=[final_answer], ## add your tools here (don't remove final answer)
+    tools=[final_answer, get_stock_price, get_current_time_in_timezone], ## add your tools here (don't remove final answer)
     max_steps=6,
     verbosity_level=1,
     grammar=None,
