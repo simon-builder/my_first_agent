@@ -38,7 +38,8 @@ final_answer = FinalAnswerTool()
 model = HfApiModel(
 max_tokens=2096,
 temperature=0.5,
-model_id='https://wxknx1kg971u7k1n.us-east-1.aws.endpoints.huggingface.cloud',# it is possible that this model may be overloaded
+# model_id='https://wxknx1kg971u7k1n.us-east-1.aws.endpoints.huggingface.cloud',# it is possible that this model may be overloaded
+model_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
 custom_role_conversions=None,
 )
 
