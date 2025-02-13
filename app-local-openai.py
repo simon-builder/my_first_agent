@@ -1,4 +1,4 @@
-from smolagents import CodeAgent,DuckDuckGoSearchTool, HfApiModel,load_tool,tool
+from smolagents import CodeAgent, HfApiModel,load_tool, tool, OpenAIServerModel
 import datetime
 import requests
 import pytz
@@ -6,8 +6,13 @@ import yaml
 import yfinance as yf
 from bs4 import BeautifulSoup
 from tools.final_answer import FinalAnswerTool
+import dotenv
+import os
 
 from Gradio_UI import GradioUI
+
+dotenv.load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
 
 # Tool to retrieve stock price from Yahoo Finance
 
@@ -67,16 +72,16 @@ def get_current_time_in_timezone(timezone: str) -> str:
 
 
 final_answer = FinalAnswerTool()
-model = HfApiModel(
-max_tokens=2096,
-temperature=0.5,
-model_id='Qwen/Qwen2.5-Coder-32B-Instruct',
-custom_role_conversions=None,
+model = OpenAIServerModel(
+    max_tokens=2096,
+    temperature=0.5,
+    model_id="gpt-4o",
+    api_key=api_key,
+    custom_role_conversions=None,
 )
 
-
 # Import tool from Hub
-# image_generation_tool = load_tool("agents-course/text-to-image", trust_remote_code=True)
+image_generation_tool = load_tool("agents-course/text-to-image", trust_remote_code=True)
 
 with open("prompts.yaml", 'r') as stream:
     prompt_templates = yaml.safe_load(stream)
