@@ -1,26 +1,8 @@
-from smolagents import CodeAgent, HfApiModel,load_tool, tool, OpenAIServerModel
-import datetime
-import requests
-import pytz
-import yaml
-import yfinance as yf
-from bs4 import BeautifulSoup
-from tools.final_answer import FinalAnswerTool
-import dotenv
-import os
 import requests
 import json
 from datetime import datetime
 from typing import Dict, List, Optional, Union
 
-from Gradio_UI import GradioUI
-
-dotenv.load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
-
-# Tool to retrieve stock price from Yahoo Finance
-
-@tool
 def get_voting_data() -> Dict[str, Union[bool, str, List[Dict]]]:
     """
     Retrieves a list of all available Swiss federal voting proposals and their metadata from opendata.swiss.
@@ -101,7 +83,6 @@ def get_voting_data() -> Dict[str, Union[bool, str, List[Dict]]]:
     
     return result
 
-@tool
 def get_voting_summary(proposal_name: str) -> Dict[str, Union[bool, str, Dict]]:
     """
     Retrieves and summarizes detailed results for a specific Swiss federal voting proposal.
@@ -111,15 +92,14 @@ def get_voting_summary(proposal_name: str) -> Dict[str, Union[bool, str, Dict]]:
     enough to match the correct vote.
 
     Args:
-        proposal_name: str
-            The name or description of the voting proposal to search for.
+        proposal_name (str): The name or description of the voting proposal to search for.
             Can be provided in two formats:
             1. Full format: "Federal proposals: 1. Popular Initiative 'Initiative Name'"
             2. Simple format: "Initiative Name"
             The text between single quotes (if present) is used for matching.
 
     Returns:
-        Dict[str, Union[bool, str, Dict]]: A dictionary containing:
+        Dict[str, Union[bool, str, Dict]]: A dictionary with the following structure:
             {
                 'success': bool,  # Whether the data was successfully retrieved
                 'error': str | None,  # Error message if any occurred
@@ -239,32 +219,42 @@ def get_voting_summary(proposal_name: str) -> Dict[str, Union[bool, str, Dict]]:
     
     return result
 
+if __name__ == "__main__":
+    # Example usage with formatted output
+    result = get_voting_data()
+    if result['success']:
+        print("Available voting data:")
+        print("-" * 50)
+        for resource in result['data']:
+            print(f"Date: {resource['date']}")
+            print(f"Description: {resource['description']}")
+            print(f"Download URL: {resource['download_url']}")
+            print(f"Format: {resource['format']}")
+            print(f"Last Modified: {resource['last_modified']}")
+            print("-" * 50)
+    else:
+        print(f"Error: {result['error']}")
 
-final_answer = FinalAnswerTool()
-model = OpenAIServerModel(
-    max_tokens=2096,
-    temperature=0.5,
-    model_id="gpt-4o",
-    api_key=api_key,
-    custom_role_conversions=None,
-)
-
-# Import tool from Hub
-# image_generation_tool = load_tool("agents-course/text-to-image", trust_remote_code=True)
-
-with open("prompts-openai.yaml", 'r') as stream:
-    prompt_templates = yaml.safe_load(stream)
+    # Example usage
+    proposal = "Federal proposals: 1. Popular Initiative 'For a responsible economy within our planet's limits'"
+    result = get_voting_summary(proposal)
     
-agent = CodeAgent(
-    model=model,
-    tools=[final_answer, get_voting_data, get_voting_summary], ## add your tools here (don't remove final answer)
-    max_steps=6,
-    verbosity_level=1,
-    grammar=None,
-    planning_interval=None,
-    name=None,
-    description=None,
-    prompt_templates=prompt_templates
-)
-
-GradioUI(agent).launch()
+    if result['success']:
+        summary = result['summary']
+        print("\nVoting Summary:")
+        print("-" * 50)
+        print(f"Title (English): {summary['title']}")
+        print(f"Date: {summary['date'][:4]}-{summary['date'][4:6]}-{summary['date'][6:]}")  # Format YYYY-MM-DD
+        print(f"Result: {'Accepted' if summary['accepted'] else 'Rejected'}")
+        print(f"Turnout: {summary['turnout']:.1f}%")
+        print(f"Yes Percentage: {summary['yes_percentage']:.1f}%")
+        print(f"Yes Votes: {summary['yes_votes']:,}")
+        print(f"No Votes: {summary['no_votes']:,}")
+        print(f"Eligible Voters: {summary['eligible_voters']:,}")
+        
+        # Print titles in all languages
+        print("\nTitles in all languages:")
+        for lang, title in summary['all_titles'].items():
+            print(f"{lang.upper()}: {title}")
+    else:
+        print(f"Error: {result['error']}")
