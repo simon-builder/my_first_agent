@@ -1,18 +1,11 @@
-from smolagents import CodeAgent, HfApiModel,load_tool, tool, OpenAIServerModel
-import datetime
-import requests
-import pytz
-import yaml
-import yfinance as yf
-from bs4 import BeautifulSoup
-from tools.final_answer import FinalAnswerTool
+from smolagents import CodeAgent, OpenAIServerModel, tool
 import dotenv
 import os
 import requests
 import json
-from datetime import datetime
 from typing import Dict, List, Optional, Union
-
+import yaml
+from tools.final_answer import FinalAnswerTool
 from Gradio_UI import GradioUI
 
 dotenv.load_dotenv()

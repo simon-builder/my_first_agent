@@ -1,6 +1,5 @@
 import requests
 import json
-from datetime import datetime
 from typing import Dict, List, Optional, Union
 
 def get_voting_data() -> Dict[str, Union[bool, str, List[Dict]]]:
