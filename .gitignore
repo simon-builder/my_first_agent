@@ -24,13 +24,14 @@ out/
 coverage/
 
 # Python
-__pycache__
-*.pyc
-*.pyo
-*.pyd
+__pycache__/
+*.py[cod]
+*$py.class
 env/
 venv/
+.env/
 .venv/
+ENV/
 
 # Logs and temporary files
 *.log
@@ -44,7 +45,8 @@ venv/
 *.sublime-workspace
 
 # Environment variables
-.env*
+.env
+.env.*
 
 # Build output
 dist/
